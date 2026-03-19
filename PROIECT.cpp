@@ -14,6 +14,7 @@ int n, a, b, coef_A, coef_B, coef_C, prob_recombinare, prob_mutatie, etape, prec
 int nr_biti;
 double pas_discretizare;
 double probabilitatea[1005], capat_selectie[1005];
+bool prima_generatie = true;
 
 struct Individ{
     string cromozom;
@@ -69,9 +70,11 @@ double fitness(double x){
 }
 
 void afiseaza_populatie_initiala() {
-    fout<<"Populatia initiala"<<'\n';
-    for (int i = 1; i <= n; i++) {
-        fout<<setw(3)<<i<<" : "<<populatie[i].cromozom<<"  x = "<<setw(10)<<populatie[i].x<<"  f = "<<setw(10)<<populatie[i].fitness<<'\n';
+    if (prima_generatie == true){
+        fout<<"Populatia initiala"<<'\n';
+        for (int i = 1; i <= n; i++) {
+            fout<<setw(3)<<i<<" : "<<populatie[i].cromozom<<"  x = "<<setw(10)<<populatie[i].x<<"  f = "<<setw(10)<<populatie[i].fitness<<'\n';
+        }
     }
 }
 
@@ -80,12 +83,14 @@ void selectie(){
     for (int i=1; i<=n; i++)
         sum += populatie[i].fitness;
 
-    fout<<'\n';
-    fout<<"Probabilitati selectie"<<'\n';
-    for (int i=1; i<=n; i++){
-        probabilitatea[i] = populatie[i].fitness / sum;
+    if (prima_generatie == true){
+        fout<<'\n';
+        fout<<"Probabilitati selectie"<<'\n';
+        for (int i=1; i<=n; i++){
+            probabilitatea[i] = populatie[i].fitness / sum;
 
-        fout<<setw(11)<<"cromozom " <<setw(4)<<i<<" probabilitate "<<setw(12)<<probabilitatea[i]<<'\n';
+            fout<<setw(11)<<"cromozom " <<setw(4)<<i<<" probabilitate "<<setw(12)<<probabilitatea[i]<<'\n';
+        }
     }
 }
 
@@ -94,12 +99,14 @@ void intervale_selectie(){
         capat_selectie[i] = i==1 ? 0 : capat_selectie[i-1] + probabilitatea[i];
     }
 
-    fout<<'\n';
-    fout<<"Intervale probabilitati selectie"<<'\n';
-    for (int i=1; i<n; i++){
-        fout<<"[ "<<capat_selectie[i]<<" , "<<capat_selectie[i+1]<<" ]"<<'\n';
+    if (prima_generatie == true){
+        fout<<'\n';
+        fout<<"Intervale probabilitati selectie"<<'\n';
+        for (int i=1; i<n; i++){
+            fout<<"[ "<<capat_selectie[i]<<" , "<<capat_selectie[i+1]<<" ]"<<'\n';
+        }
+        fout<<"[ "<<capat_selectie[n]<<" , "<<"1.0"<<" ]"<<'\n';
     }
-    fout<<"[ "<<capat_selectie[n]<<" , "<<"1.0"<<" ]"<<'\n';
 }
 
 int cauta_interval(double u) {
@@ -120,37 +127,46 @@ void selecteaza_populatie_noua() {
         if (populatie[i].fitness > populatie[elite].fitness) 
             elite=i;
     
-    fout<<'\n';
+    if (prima_generatie == true) 
+        fout<<'\n';
     for (int i=1; i<=n; i++){
         double random = (double)rand() / RAND_MAX;
         int index_cromozom = cauta_interval(random);
 
-        fout<<"u = "<<setprecision(16)<<random<< "  ->  selectam cromozomul "<<index_cromozom<<'\n';
+        if (prima_generatie == true)
+            fout<<"u = "<<setprecision(16)<<random<< "  ->  selectam cromozomul "<<index_cromozom<<'\n';
         populatie_noua[i] = populatie[index_cromozom];
     }
     populatie_noua[1] = populatie[elite];
 
-    fout<<'\n';
-    fout<<"Dupa selectie:\n";
-    for (int i = 1; i <= n; i++) {
-        populatie[i] = populatie_noua[i];
-        fout<<setw(3)<<i<<" : "<<populatie[i].cromozom<<"  x = "<<setw(10)<<setprecision(6)<<populatie[i].x<<"  f = " <<setw(10)<<setprecision(6)<<populatie[i].fitness<<'\n';
+    if (prima_generatie == true){
+        fout<<'\n';
+        fout<<"Dupa selectie:\n";
+        for (int i = 1; i <= n; i++) {
+            populatie[i] = populatie_noua[i];
+            fout<<setw(3)<<i<<" : "<<populatie[i].cromozom<<"  x = "<<setw(10)<<setprecision(6)<<populatie[i].x<<"  f = " <<setw(10)<<setprecision(6)<<populatie[i].fitness<<'\n';
+        }
     }
 }
 
 void crossover(){
     double prob_cross = (double)prob_recombinare/100;
-    fout<<'\n';
-    fout<<"Probabilitatea de incrucisare "<<prob_cross<<'\n';
+    if (prima_generatie == true){
+        fout<<'\n';
+        fout<<"Probabilitatea de incrucisare "<<prob_cross<<'\n';
+    }
 
     int participare[1005], k=0;
-    fout<<'\n';
+    if (prima_generatie == true)
+        fout<<'\n';
     for (int i=1; i<=n; i++){
         double random = (double)rand() / RAND_MAX;
 
-        fout<<setw(3)<<i<<": " <<populatie[i].cromozom<< "  u = " <<setprecision(16)<<random;
-        if (random < prob_cross) fout<<" < "<<prob_cross<<"  participa";
-        fout<<'\n';
+        if (prima_generatie == true){
+            fout<<setw(3)<<i<<": " <<populatie[i].cromozom<< "  u = " <<setprecision(16)<<random;
+            if (random < prob_cross) fout<<" < "<<prob_cross<<"  participa";
+            fout<<'\n';
+        }
 
         if (random < prob_cross) participare[++k] = i;
 
@@ -162,8 +178,10 @@ void crossover(){
 
         int punct_rupere = 1 + rand() % (nr_biti - 1);
 
-        fout<<"\nRecombinare intre cromozomul "<<x<< " si cromozomul "<<y<<":\n";
-        fout<<populatie[x].cromozom<<"  "<<populatie[y].cromozom<<"  punct = "<<punct_rupere<<'\n';
+        if (prima_generatie == true){
+            fout<<"\nRecombinare intre cromozomul "<<x<< " si cromozomul "<<y<<":\n";
+            fout<<populatie[x].cromozom<<"  "<<populatie[y].cromozom<<"  punct = "<<punct_rupere<<'\n';
+        }
 
         string newX = populatie[x].cromozom.substr(0, punct_rupere) + populatie[y].cromozom.substr(punct_rupere);
         string newY = populatie[y].cromozom.substr(0, punct_rupere) + populatie[x].cromozom.substr(punct_rupere);
@@ -176,7 +194,55 @@ void crossover(){
         populatie[y].x = decode(newY);
         populatie[y].fitness = fitness(populatie[y].x);
 
-        fout<<"Rezultat:  "<<populatie[x].cromozom<<"  "<<populatie[y].cromozom<<'\n';
+        if (prima_generatie == true)
+            fout<<"Rezultat:  "<<populatie[x].cromozom<<"  "<<populatie[y].cromozom<<'\n';
+    }
+
+    if (prima_generatie == true){
+        fout<<'\n';
+        fout<<"Dupa recombinare"<<'\n';
+        for (int i=1;i<=n;i++){
+            fout<<setw(3)<<i<<" : "<<populatie[i].cromozom<<"  x = "<<setw(10)<<setprecision(6)<<populatie[i].x<<"  f = "<<setw(10)<<setprecision(6)<<populatie[i].fitness<<'\n';
+        }
+    }
+}
+
+void mutatie(){
+    double prob_mut = (double)prob_mutatie / 100;
+
+    if (prima_generatie == true){
+        fout<<'\n';
+        fout<<"Probabilitate de mutatie pentru fiecare gena "<<prob_mut<<'\n';
+    }
+
+    Individ elita = populatie[1];
+
+    if (prima_generatie == true)
+        fout<<"Au fost modificati cromozomii :"<<'\n';
+    for (int i=2; i<=n; i++){
+        bool ok = false;
+         for (char& bit : populatie[i].cromozom) {
+            double random = (double)rand() / RAND_MAX;
+            if (random < prob_mut){ 
+                bit ^= 1; 
+                ok = true;
+            }
+        }
+        if (ok == true){
+            populatie[i].x = decode(populatie[i].cromozom);
+            populatie[i].fitness = fitness(populatie[i].x);
+            if (prima_generatie == true)
+                fout<<i<<'\n';
+        }
+    }
+    populatie[1] = elita;
+
+    
+    if (prima_generatie == true){
+        fout << "\nDupa mutatie:\n";
+        for (int i = 1; i <= n; i++){
+            fout<<setw(3)<<i<<" : "<<populatie[i].cromozom<<"  x = "<<setw(10)<<setprecision(6)<<populatie[i].x<<"  f = "<<setw(10)<<setprecision(6)<<populatie[i].fitness<<'\n';
+        }
     }
 }
 
@@ -193,12 +259,30 @@ int main(){
     }
 
     afiseaza_populatie_initiala();
-
     selectie();
-
     intervale_selectie();
-
     selecteaza_populatie_noua();
-
     crossover();
+    mutatie();
+
+    prima_generatie = false;
+
+    fout<<'\n';
+    fout<<"Evolutia maximului"<<'\n';
+    for (int generatie=2; generatie<=etape; generatie++){
+        afiseaza_populatie_initiala();
+        selectie();
+        intervale_selectie();
+        selecteaza_populatie_noua();
+        crossover();
+        mutatie();
+
+        double Max = populatie[1].fitness, medie = 0;
+        for (int i=1; i<=n; i++) {
+            Max = max(Max, populatie[i].fitness);
+            medie += populatie[i].fitness;
+        }
+        medie /= n;
+        fout<<"Generatia "<<setw(3)<<generatie<<" :  Max Fitness = "<<setprecision(15)<<Max<<"  Mean Fitness = "<<medie<<'\n';
+    }
 }
