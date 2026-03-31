@@ -96,7 +96,7 @@ void selectie(){
 
 void intervale_selectie(){
     for (int i=1; i<=n; i++){
-        capat_selectie[i] = i==1 ? 0 : capat_selectie[i-1] + probabilitatea[i];
+        capat_selectie[i] = i==1 ? 0 : capat_selectie[i-1] + probabilitatea[i-1];
     }
 
     if (prima_generatie == true){
