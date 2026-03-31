@@ -83,14 +83,14 @@ void selectie(){
     for (int i=1; i<=n; i++)
         sum += populatie[i].fitness;
 
+    for (int i=1; i<=n; i++)
+        probabilitatea[i] = populatie[i].fitness / sum;
+
     if (prima_generatie == true){
         fout<<'\n';
         fout<<"Probabilitati selectie"<<'\n';
-        for (int i=1; i<=n; i++){
-            probabilitatea[i] = populatie[i].fitness / sum;
-
-            fout<<setw(11)<<"cromozom " <<setw(4)<<i<<" probabilitate "<<setw(12)<<probabilitatea[i]<<'\n';
-        }
+        for (int i=1; i<=n; i++)
+            fout<<setw(11)<<"cromozom "<<setw(4)<<i<<" probabilitate "<<setw(12)<<probabilitatea[i]<<'\n';
     }
 }
 
@@ -139,13 +139,14 @@ void selecteaza_populatie_noua() {
     }
     populatie_noua[1] = populatie[elite];
 
+    for (int i = 1; i <= n; i++)
+        populatie[i] = populatie_noua[i];
+
     if (prima_generatie == true){
         fout<<'\n';
         fout<<"Dupa selectie:\n";
-        for (int i = 1; i <= n; i++) {
-            populatie[i] = populatie_noua[i];
-            fout<<setw(3)<<i<<" : "<<populatie[i].cromozom<<"  x = "<<setw(10)<<setprecision(6)<<populatie[i].x<<"  f = " <<setw(10)<<setprecision(6)<<populatie[i].fitness<<'\n';
-        }
+        for (int i = 1; i <= n; i++)
+            fout<<setw(3)<<i<<" : "<<populatie[i].cromozom<<"  x = "<<setw(10)<<setprecision(6)<<populatie[i].x<<"  f = "<<setw(10)<<setprecision(6)<<populatie[i].fitness<<'\n';
     }
 }
 
