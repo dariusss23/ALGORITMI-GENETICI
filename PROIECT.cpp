@@ -72,7 +72,7 @@ double fitness(double x){
 void afiseaza_populatie_initiala() {
     if (prima_generatie == true){
         fout<<"Populatia initiala"<<'\n';
-        for (int i = 1; i <= n; i++) {
+        for (int i=1; i<=n; i++) {
             fout<<setw(3)<<i<<" : "<<populatie[i].cromozom<<"  x = "<<setw(10)<<populatie[i].x<<"  f = "<<setw(10)<<populatie[i].fitness<<'\n';
         }
     }
@@ -139,13 +139,13 @@ void selecteaza_populatie_noua() {
     }
     populatie_noua[1] = populatie[elite];
 
-    for (int i = 1; i <= n; i++)
+    for (int i=1; i<=n; i++)
         populatie[i] = populatie_noua[i];
 
     if (prima_generatie == true){
         fout<<'\n';
         fout<<"Dupa selectie:\n";
-        for (int i = 1; i <= n; i++)
+        for (int i=1; i<=n; i++)
             fout<<setw(3)<<i<<" : "<<populatie[i].cromozom<<"  x = "<<setw(10)<<setprecision(6)<<populatie[i].x<<"  f = "<<setw(10)<<setprecision(6)<<populatie[i].fitness<<'\n';
     }
 }
@@ -241,7 +241,7 @@ void mutatie(){
     
     if (prima_generatie == true){
         fout << "\nDupa mutatie:\n";
-        for (int i = 1; i <= n; i++){
+        for (int i=1; i<=n; i++){
             fout<<setw(3)<<i<<" : "<<populatie[i].cromozom<<"  x = "<<setw(10)<<setprecision(6)<<populatie[i].x<<"  f = "<<setw(10)<<setprecision(6)<<populatie[i].fitness<<'\n';
         }
     }
@@ -254,7 +254,7 @@ int main(){
     pas_discretizare = (b-a)/pow(2,nr_biti);
 
     for (int i=1; i<=n; i++){
-        populatie[i].cromozom =  random_bits();
+        populatie[i].cromozom = random_bits();
         populatie[i].x = decode(populatie[i].cromozom);
         populatie[i].fitness = fitness(populatie[i].x);
     }
