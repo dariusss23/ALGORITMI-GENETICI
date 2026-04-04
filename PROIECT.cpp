@@ -295,4 +295,6 @@ int main(){
         medie /= n;
         fout<<"Generatia "<<setw(3)<<generatie<<" :  Max Fitness = "<<setprecision(15)<<Max<<"  Mean Fitness = "<<medie<<'\n';
     }
+
+    fout.close();
 }
