@@ -2,7 +2,6 @@
 #include <fstream>
 #include <cmath>
 #include <iomanip>
-#include <random>
 
 using namespace std;
 
@@ -58,11 +57,21 @@ string random_bits(){
     return s;
 }
 
+// double decode(string cromozom){
+//     long long k = 0;
+//     for (char c : cromozom)
+//         k = k * 2 + (c - '0');
+//     return a + k * pas_discretizare;
+// }
+
 double decode(string cromozom){
     long long k = 0;
-    for (char c : cromozom)
-        k = k * 2 + (c - '0');
-    return a + k * pas_discretizare;
+    int putere = 1;
+    for (int i=nr_biti-1; i>=0; i--){
+        k += (cromozom[i]-'0') * putere;
+        putere *= 2;
+    }
+    return a + k*pas_discretizare;
 }
 
 double fitness(double x){
@@ -103,9 +112,9 @@ void intervale_selectie(){
         fout<<'\n';
         fout<<"Intervale probabilitati selectie"<<'\n';
         for (int i=1; i<n; i++){
-            fout<<"[ "<<capat_selectie[i]<<" , "<<capat_selectie[i+1]<<" ]"<<'\n';
+            fout<<"[ "<<capat_selectie[i]<<" , "<<capat_selectie[i+1]<<" )"<<'\n';
         }
-        fout<<"[ "<<capat_selectie[n]<<" , "<<"1.0"<<" ]"<<'\n';
+        fout<<"[ "<<capat_selectie[n]<<" , "<<"1.0"<<" )"<<'\n';
     }
 }
 
@@ -248,6 +257,7 @@ void mutatie(){
 }
 
 int main(){
+    srand(time(0));
     citire();
 
     nr_biti = ceil(log2((b - a) * pow(10, precizie)));
@@ -271,7 +281,6 @@ int main(){
     fout<<'\n';
     fout<<"Evolutia maximului"<<'\n';
     for (int generatie=2; generatie<=etape; generatie++){
-        afiseaza_populatie_initiala();
         selectie();
         intervale_selectie();
         selecteaza_populatie_noua();
