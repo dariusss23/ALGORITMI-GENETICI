@@ -5,7 +5,7 @@
 
 using namespace std;
 
-ifstream fin("EVOLUTIE.IN");
+ifstream fin("EVOLUTIE.in");
 ofstream fout("EVOLUTIE.out");
 
 int n, a, b, coef_A, coef_B, coef_C, prob_recombinare, prob_mutatie, etape, precizie;
@@ -21,32 +21,21 @@ struct Individ{
     double fitness;
 };
 
-
 Individ populatie[1005];
 
 void citire(){
-    cout<<"Dimensiunea populatiei: ";
-    fin>>n;
-    cout<<"Coeficientul 'a' al ecuatiei a * x^2 + b * x + c : ";
-    fin>>coef_A;
-    cout<<"Coeficientul 'b' al ecuatiei "<<coef_A<<" * x^2 + b * x + c : ";
-    fin>>coef_B;
-    cout<<"Coeficientul 'c' al ecuatiei "<<coef_A<<" x^2 + "<<coef_B<<" * x + c : ";
-    fin>>coef_C;
-    cout<<"Functia : "<<coef_A<<" * x^2 + "<<coef_B<<" * x + "<<coef_C<<'\n';
-    cout<<"Precizie : ";
-    fin>>precizie;
-    cout<<"Domeniul capat stanga [ _ , ] : ";
-    fin>>a;
-    cout<<"Domeniul capat dreapta:["<<a<<" , _ ] : ";
-    fin>>b;
-    cout<<"Domeniul : [ "<<a<<" , "<<b<<" ]"<<'\n';
-    cout<<"Probabilitatea de recombinare (? %) : ";
-    fin>>prob_recombinare;
-    cout<<"Probabilitatea de  mutatie (? %) : ";
-    fin>>prob_mutatie;
-    cout<<"Numar etape : ";
-    fin>>etape;
+    string eticheta;
+
+    fin>>eticheta>>n;
+    fin>>eticheta>>coef_A;
+    fin>>eticheta>>coef_B;
+    fin>>eticheta>>coef_C;
+    fin>>eticheta>>precizie;
+    fin>>eticheta>>a;
+    fin>>eticheta>>b;
+    fin>>eticheta>>prob_recombinare;
+    fin>>eticheta>>prob_mutatie;
+    fin>>eticheta>>etape;
 }
 
 string random_bits(){
@@ -56,13 +45,6 @@ string random_bits(){
     }
     return s;
 }
-
-// double decode(string cromozom){
-//     long long k = 0;
-//     for (char c : cromozom)
-//         k = k * 2 + (c - '0');
-//     return a + k * pas_discretizare;
-// }
 
 double decode(string cromozom){
     long long k = 0;
@@ -135,7 +117,7 @@ void selecteaza_populatie_noua() {
     for (int i=2; i<=n; i++)
         if (populatie[i].fitness > populatie[elite].fitness) 
             elite=i;
-    
+
     if (prima_generatie == true) 
         fout<<'\n';
     for (int i=1; i<=n; i++){
@@ -169,7 +151,7 @@ void crossover(){
     int participare[1005], k=0;
     if (prima_generatie == true)
         fout<<'\n';
-    for (int i=1; i<=n; i++){
+    for (int i=2; i<=n; i++){
         double random = (double)rand() / RAND_MAX;
 
         if (prima_generatie == true){
@@ -231,7 +213,7 @@ void mutatie(){
         fout<<"Au fost modificati cromozomii :"<<'\n';
     for (int i=2; i<=n; i++){
         bool ok = false;
-         for (char& bit : populatie[i].cromozom) {
+        for (char& bit : populatie[i].cromozom) {
             double random = (double)rand() / RAND_MAX;
             if (random < prob_mut){ 
                 bit ^= 1; 
@@ -293,7 +275,7 @@ int main(){
             medie += populatie[i].fitness;
         }
         medie /= n;
-        fout<<"Generatia "<<setw(3)<<generatie<<" :  Max Fitness = "<<setprecision(15)<<Max<<"  Mean Fitness = "<<medie<<'\n';
+        fout<<"Generatia "<<setw(3)<<generatie<<" :  Fitness Max = "<<setprecision(15)<<Max<<"  Fitness Mediu = "<<medie<<'\n';
     }
 
     fout.close();
