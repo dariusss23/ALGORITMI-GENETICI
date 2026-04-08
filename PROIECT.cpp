@@ -121,7 +121,7 @@ void selecteaza_populatie_noua() {
     if (prima_generatie == true) 
         fout<<'\n';
     for (int i=1; i<=n; i++){
-        double random = (double)rand() / RAND_MAX;
+        double random = (double)rand() / (RAND_MAX + 1.0);
         int index_cromozom = cauta_interval(random);
 
         if (prima_generatie == true)
@@ -152,7 +152,7 @@ void crossover(){
     if (prima_generatie == true)
         fout<<'\n';
     for (int i=2; i<=n; i++){
-        double random = (double)rand() / RAND_MAX;
+        double random = (double)rand() / (RAND_MAX + 1.0);
 
         if (prima_generatie == true){
             fout<<setw(3)<<i<<": " <<populatie[i].cromozom<< "  u = " <<setprecision(16)<<random;
@@ -214,7 +214,7 @@ void mutatie(){
     for (int i=2; i<=n; i++){
         bool ok = false;
         for (char& bit : populatie[i].cromozom) {
-            double random = (double)rand() / RAND_MAX;
+            double random = (double)rand() / (RAND_MAX + 1.0);
             if (random < prob_mut){ 
                 bit ^= 1; 
                 ok = true;
